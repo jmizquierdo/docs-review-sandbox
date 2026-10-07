@@ -8,7 +8,7 @@ date: "2026-10-07"
 
 This policy defines the rules for protecting company information.
 It applies to all employees, contractors and third parties.
-The policy is reviewed anually by the Security Office.
+The policy is reviewed annually by the Security Office.
 
 # Scope
 
