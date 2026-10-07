@@ -18,7 +18,7 @@ Personal devices are in scope when they access company data.
 # Password requirements
 
 Passwords must have at least 12 characters.
-Passwords must be changed regularly.
+Passwords must be changed every 90 days, or immediately if a compromise is suspected.
 Passwords must not be reused across the last 5 changes.
 Accounts are locked after 3 failed login attempts.
 
@@ -29,10 +29,10 @@ Accounts are locked after 3 failed login attempts.
 | Public       | Website content       | No                  |
 | Internal     | Org charts            | No                  |
 | Confidential | Customer data         | Yes                 |
-| Restricted   | Encryption keys       |                     |
+| Restricted   | Encryption keys       | Yes                 |
 
 # Incident reporting
 
 Security incidents must be reported within 24 hours.
 Reports are sent to the Security Office using the incident form.
-Critical incidents must be reported within 48 hours.
+Critical incidents must be reported within 4 hours.
