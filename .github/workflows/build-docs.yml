@@ -1,0 +1,51 @@
+name: Build documents
+
+on:
+  pull_request:
+    paths:
+      - "docs/**.md"
+  push:
+    branches: [main]
+    paths:
+      - "docs/**.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # Pinned on purpose: bump deliberately, not implicitly.
+  PANDOC_IMAGE: pandoc/latex:3.11.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Render Markdown to PDF and DOCX
+        run: |
+          shopt -s nullglob
+          mkdir -p output
+          files=(docs/*.md)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No documents found in docs/" >&2
+            exit 1
+          fi
+          for f in "${files[@]}"; do
+            name="$(basename "$f" .md)"
+            echo "Rendering $f"
+            docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" "$PANDOC_IMAGE" \
+              "$f" -o "output/$name.pdf" -V geometry:margin=2.5cm
+            docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" "$PANDOC_IMAGE" \
+              "$f" -o "output/$name.docx"
+          done
+          ls -l output
+
+      - name: Upload rendered documents
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-documents
+          path: output/
+          if-no-files-found: error
