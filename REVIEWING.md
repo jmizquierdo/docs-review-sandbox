@@ -214,7 +214,7 @@ Leave an empty line between paragraphs, and between a heading and its text.
 Push your branch, then open the PR on GitHub.
 GitHub shows a **Compare & pull request** button after you push.
 
-![TODO: screenshot - PR creation form with the template](guide/images/01-pr-creation-form.png)
+![The PR creation form, pre-filled with the template](guide/images/01-pr-creation-form.png)
 
 The description is pre-filled with our template.
 Fill in every section:
@@ -323,7 +323,7 @@ To download the final, approved PDF and DOCX:
 2. Click the latest **Build documents** run on `main`.
 3. Download `rendered-documents` from the **Artifacts** section.
 
-![TODO: screenshot - the final artifact of the build on main](guide/images/17-final-artifact-main.png)
+![The final rendered-documents artifact of the build on main](guide/images/17-final-artifact-main.png)
 
 These are the files to publish or share.
 Never edit them by hand: any change must go through a new PR.
