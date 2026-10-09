@@ -63,6 +63,69 @@ The reviewer gets a notification and an email, and the PR appears under **Pull r
 
 ![A review request in the reviewer's notifications inbox (bell icon, top right)](guide/images/00-notifications.png)
 
+## Automatic reviewers with CODEOWNERS
+
+Instead of picking reviewers by hand every time, the repository can request them automatically.
+The `CODEOWNERS` file, at the top level of the repository, says who reviews which files.
+When a PR changes a file, GitHub requests a review from that file's owners as soon as the PR is opened.
+The author can still add more reviewers by hand.
+
+In this repository the file contains one line, so `heydolon` is requested on every PR:
+
+```text
+* @heydolon
+```
+
+### How the file works
+
+- Each line has a **file pattern** followed by one or more **owners**, separated by spaces.
+- An owner is a GitHub username with `@` (`@heydolon`), a team in an organization (`@my-org/docs-team`), or the email address of a GitHub account.
+- `*` means every file. A folder ends with `/` (`/docs/`). A single file is written with its full path (`/docs/sample-policy.md`).
+- Lines that start with `#` are comments.
+- **The last matching line wins.** Put the general rules first and the specific ones after them.
+- Owners must be collaborators with write access. GitHub ignores owners it can't use, and shows a warning at the top of the file when you open it on GitHub.
+- The author of a PR is never asked to review their own PR, even if they own the file.
+
+### Example
+
+```text
+# Default: heydolon reviews everything
+*                         @heydolon
+
+# Every document in docs/ is reviewed by the documentation team
+/docs/                    @my-org/docs-team
+
+# The security policy needs two people: both are requested
+/docs/sample-policy.md    @heydolon @alice
+
+# The guide and its screenshots
+/REVIEWING.md             @heydolon
+/guide/images/            @heydolon
+
+# Changes to the build go to whoever maintains it
+/.github/                 @bob
+```
+
+With this file:
+
+- A PR that changes `docs/password-policy.md` requests `@my-org/docs-team`. The `/docs/` line is the last one that matches.
+- A PR that changes `docs/sample-policy.md` requests `@heydolon` and `@alice`, but not the team. The more specific line comes later, so it wins.
+- A PR that changes `README.md` requests `@heydolon`. Only the `*` line matches.
+
+### Changing the reviewers
+
+`CODEOWNERS` is changed like any document, through a PR:
+
+1. Create a branch (see "For authors", step 1).
+2. On your branch, open `CODEOWNERS` and click the pencil icon.
+3. Add, remove or change lines, for example add `@alice` after `@heydolon` to make both review everything.
+4. **Commit changes** to your branch and open a PR. The current owners are asked to approve the change.
+5. The new rules apply to PRs opened **after** the change is merged into `main`.
+
+Optionally, the repository admin can switch on **Require review from Code Owners** in the branch protection of `main`.
+Then a PR can't be merged until one of the owners of each changed file has approved it.
+It is not switched on in this repository.
+
 ## 1. Open the Pull Request
 
 You get a notification (email and the bell icon on GitHub) when someone asks for your review.
@@ -422,6 +485,7 @@ Reviewers and authors do everything on the GitHub website.
 | Start a change | **Code** tab, branch menu (shows `main`), type a name, **Create branch** |
 | Write reviewable text | One sentence per line, empty line between paragraphs |
 | Ask for a review | Open a PR, fill in the template, add reviewers |
+| Have reviewers requested automatically | Add a line to `CODEOWNERS` (file pattern, then `@username`) through a PR |
 | Get a full review of an existing document | The "add the whole file" trick: PR against a branch where the file is deleted |
 | Accept one suggestion | **Commit suggestion**, then **Commit changes** |
 | Accept several suggestions | **Add suggestion to batch** on each, then **Commit suggestions** |
