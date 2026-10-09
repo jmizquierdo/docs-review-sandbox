@@ -6,12 +6,14 @@ on:
       - "docs/**.md"
       - "REVIEWING.md"
       - "guide/images/**"
+      - ".github/workflows/build-docs.yml"
   push:
     branches: [main]
     paths:
       - "docs/**.md"
       - "REVIEWING.md"
       - "guide/images/**"
+      - ".github/workflows/build-docs.yml"
   workflow_dispatch:
 
 permissions:
@@ -26,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Render Markdown to PDF and DOCX
         run: |
@@ -49,7 +51,7 @@ jobs:
           ls -l output
 
       - name: Upload rendered documents
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rendered-documents
           path: output/
