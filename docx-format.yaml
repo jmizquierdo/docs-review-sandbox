@@ -1,0 +1,41 @@
+# Formatting rules for tools/md-to-docx.py.
+# They apply to the DOCX of every document.
+# Change them through a PR like any document.
+
+# --- Page breaks ---
+page_breaks:
+  # Start every H1 heading on a new page.
+  h1_page_break: true
+  # H1 headings listed here do NOT get a page break.
+  h1_no_break: []
+  # H2 headings listed here DO get a page break.
+  h2_page_break: []
+
+# --- Images ---
+images:
+  center: true
+
+# --- Figure captions (the image's alt text, Word style "Image Caption") ---
+figure_captions:
+  # Remove lines like *Figure 1. Caption* under an image: Pandoc already
+  # uses the alt text as the caption, so they would appear twice.
+  strip_italic_lines: true
+  center: true
+  font_size_pt: 9
+
+# --- Tables ---
+tables:
+  center: true
+
+# --- Table captions (italic lines like *Table 1. Caption*) ---
+table_captions:
+  strip_italic_lines: false
+  center: false
+  # null keeps the normal text size.
+  font_size_pt: null
+
+# --- Code blocks (Word style "Source Code") ---
+code_blocks:
+  # Background as hex RGB, for example "F2F2F2" for light grey; null for none.
+  background_color: "F2F2F2"
+  font_size_pt: 8

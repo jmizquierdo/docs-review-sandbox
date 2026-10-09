@@ -6,6 +6,9 @@ on:
       - "docs/**.md"
       - "REVIEWING.md"
       - "guide/images/**"
+      - "docx-format.yaml"
+      - "tools/**"
+      - "requirements.txt"
       - ".github/workflows/build-docs.yml"
   push:
     branches: [main]
@@ -13,15 +16,19 @@ on:
       - "docs/**.md"
       - "REVIEWING.md"
       - "guide/images/**"
+      - "docx-format.yaml"
+      - "tools/**"
+      - "requirements.txt"
       - ".github/workflows/build-docs.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
-env:
-  # Pinned on purpose: bump deliberately, not implicitly.
-  PANDOC_IMAGE: pandoc/latex:3.11.0
+# A new push to the same branch cancels the build that is still running for the old commit.
+concurrency:
+  group: build-docs-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -30,25 +37,17 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Render Markdown to PDF and DOCX
-        run: |
-          shopt -s nullglob
-          mkdir -p output
-          files=(docs/*.md)
-          [ -f REVIEWING.md ] && files+=(REVIEWING.md)
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "No documents found" >&2
-            exit 1
-          fi
-          for f in "${files[@]}"; do
-            name="$(basename "$f" .md)"
-            echo "Rendering $f"
-            docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" "$PANDOC_IMAGE" \
-              "$f" -o "output/$name.pdf" --pdf-engine=xelatex -V geometry:margin=2.5cm
-            docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" "$PANDOC_IMAGE" \
-              "$f" -o "output/$name.docx"
-          done
-          ls -l output
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Render Markdown to DOCX (docx-format.yaml)
+        run: bash tools/render-all.sh
 
       - name: Upload rendered documents
         uses: actions/upload-artifact@v7

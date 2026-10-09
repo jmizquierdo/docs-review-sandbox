@@ -14,19 +14,19 @@ Our documents are written in Markdown, stored in GitHub, and reviewed through Pu
 - **Comments are tied to exact sentences.** Each comment is attached to the line it talks about, so nobody has to guess what "the second paragraph on page 4" means.
 - **Suggestions work like tracked changes.** A reviewer can propose new wording, and the author accepts it with one click.
 - **Full history.** GitHub records who proposed, reviewed, approved and published every change, and when.
-- **The published files always match the approved text.** The PDF and DOCX are generated automatically from the approved Markdown, never edited by hand.
+- **The published files always match the approved text.** The Word file (DOCX) is generated automatically from the approved Markdown, never edited by hand.
 - **You don't need to know Git.** Reviewers and authors only use the GitHub website.
 - **Everything happens in the browser.** You don't need to install anything.
 
 ## The process at a glance
 
 1. The author writes or changes a document on a separate branch and opens a Pull Request.
-2. GitHub builds the PDF and DOCX for that version automatically.
+2. GitHub builds the Word file (DOCX) for that version automatically.
 3. Reviewers read the document, comment on specific lines, and propose wording.
 4. Reviewers submit their verdict: **Comment**, **Request changes**, or **Approve**.
 5. The author answers, applies suggestions, fixes the rest, and resolves each conversation.
 6. The reviewer checks only what changed and approves.
-7. The author merges. GitHub builds the final PDF and DOCX from `main`.
+7. The author merges. GitHub builds the final Word file from `main`.
 
 `main` is protected. Nothing can be merged without at least one approval and with every conversation resolved.
 
@@ -144,13 +144,14 @@ In the header of the file, click the **Display the rich diff** icon (the page ic
 
 ![The rendered ("rich diff") view of the document in Files changed](guide/images/02-files-changed-rich-diff.png)
 
-**As PDF or Word.**
+**As a Word file.**
 Open the **Actions** tab, choose **Build documents**, and download `rendered-documents` from the **Artifacts** section.
-It is a `ZIP` file with the `PDF` and `DOCX` of exactly this version.
+It is a `ZIP` file with the `DOCX` of exactly this version.
+To read it as a PDF, open it in Word and save it as PDF.
 
 ![The rendered-documents artifact on the build page](guide/images/03-checks-artifact.png)
 
-You can read the `PDF` or `DOCX`, but **write your comments on GitHub**, not in the file.
+You can read the Word file, but **write your comments on GitHub**, not in the file.
 Comments in a downloaded file are lost.
 
 ## 3. Comment on a line
@@ -283,7 +284,7 @@ If you start editing on `main` by mistake, GitHub won't let you commit there and
 ## 2. Write one sentence per line
 
 Put each sentence on its own line.
-Markdown joins the lines of a paragraph when the document is rendered, so the PDF looks exactly the same.
+Markdown joins the lines of a paragraph when the document is rendered, so the Word file looks exactly the same.
 
 ```markdown
 Security incidents must be reported within 24 hours.
@@ -318,7 +319,7 @@ Add the reviewers on the right under **Reviewers**, then click **Create pull req
 See "How a review is requested" under "For reviewers" for the details.
 
 A few minutes later the **Checks** tab shows the **Build documents** run.
-When it is green, the PDF and DOCX are available to reviewers as the `rendered-documents` artifact.
+When it is green, the Word file is available to reviewers as the `rendered-documents` artifact.
 
 ## 4. Full review vs partial review
 
@@ -369,7 +370,7 @@ Fix the comments that weren't suggestions directly on GitHub:
 2. Make the changes.
 3. Click **Commit changes**, describe the fix (for example "Address review: password rotation period, Restricted encryption, critical incident deadline"), and choose **Commit directly to** your branch.
 
-The PR updates automatically, the PDF and DOCX are rebuilt, and the reviewers are notified.
+The PR updates automatically, the Word file is rebuilt, and the reviewers are notified.
 
 ## 8. Resolve the conversations
 
@@ -402,7 +403,7 @@ After merging, click **Delete branch**.
 ## 10. Get the published files
 
 Merging into `main` runs **Build documents** again.
-To download the final, approved PDF and DOCX:
+To download the final, approved Word file:
 
 1. Open the **Actions** tab of the repository.
 2. Click the latest **Build documents** run on `main`.
@@ -410,8 +411,9 @@ To download the final, approved PDF and DOCX:
 
 ![The final rendered-documents artifact of the build on main](guide/images/17-final-artifact-main.png)
 
-These are the files to publish or share.
-Never edit them by hand: any change must go through a new PR.
+This is the file to publish or share.
+For a PDF, open it in Word and save it as PDF.
+Never edit the Word file by hand: any change must go through a new PR.
 
 Artifacts are kept for 90 days by default.
 For long-term publishing, attach the files to a GitHub Release or copy them to the official location.
@@ -429,7 +431,8 @@ You can **read** the DOCX from the artifact, but comments and tracked changes in
 Write your comments and suggestions on the PR.
 
 **Where is the final PDF?**
-**Actions** tab, latest **Build documents** run on `main`, **Artifacts** section, `rendered-documents`.
+The build only produces the Word file: **Actions** tab, latest **Build documents** run on `main`, **Artifacts** section, `rendered-documents`.
+Open it in Word and save it as PDF.
 
 **Why are my comments marked "Pending"?**
 You started a review and haven't submitted it yet.
@@ -469,7 +472,7 @@ Reviewers and authors do everything on the GitHub website.
 |---|---|
 | Find PRs waiting for me | **Pull requests** in the top bar, then **Review requests** |
 | Read the formatted document | **Files changed**, then the **Display the rich diff** icon |
-| Get the PDF or DOCX | **Checks**, then **Build documents**, then **Artifacts**, then `rendered-documents` |
+| Get the Word file | **Checks**, then **Build documents**, then **Artifacts**, then `rendered-documents` |
 | Comment on a sentence | Source view, hover over the line number, click the blue **+** |
 | Comment on several lines | Drag the **+** from the first to the last line |
 | Propose new wording | In the comment box, click **Add a suggestion** (first toolbar icon) or press Cmd+G, then edit the text inside the block |
