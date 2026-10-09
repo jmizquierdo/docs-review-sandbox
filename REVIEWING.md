@@ -82,12 +82,12 @@ In the header of the file, click the **Display the rich diff** icon (the page ic
 ![The rendered ("rich diff") view of the document in Files changed](guide/images/02-files-changed-rich-diff.png)
 
 **As PDF or Word.**
-Open the **Checks** tab, choose **Build documents**, and download `rendered-documents` from the **Artifacts** section.
-It is a ZIP file with the PDF and DOCX of exactly this version.
+Open the **Actions** tab, choose **Build documents**, and download `rendered-documents` from the **Artifacts** section.
+It is a `ZIP` file with the `PDF` and `DOCX` of exactly this version.
 
 ![The rendered-documents artifact on the build page](guide/images/03-checks-artifact.png)
 
-You can read the PDF or DOCX, but **write your comments on GitHub**, not in the file.
+You can read the `PDF` or `DOCX`, but **write your comments on GitHub**, not in the file.
 Comments in a downloaded file are lost.
 
 ## 3. Comment on a line
