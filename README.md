@@ -5,6 +5,7 @@ Documents are written in Markdown under `docs/` and changed only through Pull Re
 Reviewers comment on exact lines and propose wording with "Suggest changes", working like tracked changes in Word.
 Each Pull Request is approved before it is merged into `main`.
 GitHub Actions turns every document into PDF and DOCX with Pandoc, so the published files always match the approved text.
+The step-by-step guide for reviewers and authors is in [REVIEWING.md](REVIEWING.md).
 
 ## How this started
 

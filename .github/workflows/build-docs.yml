@@ -4,10 +4,14 @@ on:
   pull_request:
     paths:
       - "docs/**.md"
+      - "REVIEWING.md"
+      - "guide/images/**"
   push:
     branches: [main]
     paths:
       - "docs/**.md"
+      - "REVIEWING.md"
+      - "guide/images/**"
   workflow_dispatch:
 
 permissions:
@@ -29,15 +33,16 @@ jobs:
           shopt -s nullglob
           mkdir -p output
           files=(docs/*.md)
+          [ -f REVIEWING.md ] && files+=(REVIEWING.md)
           if [ ${#files[@]} -eq 0 ]; then
-            echo "No documents found in docs/" >&2
+            echo "No documents found" >&2
             exit 1
           fi
           for f in "${files[@]}"; do
             name="$(basename "$f" .md)"
             echo "Rendering $f"
             docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" "$PANDOC_IMAGE" \
-              "$f" -o "output/$name.pdf" -V geometry:margin=2.5cm
+              "$f" -o "output/$name.pdf" --pdf-engine=xelatex -V geometry:margin=2.5cm
             docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" "$PANDOC_IMAGE" \
               "$f" -o "output/$name.docx"
           done
