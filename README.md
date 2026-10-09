@@ -19,6 +19,13 @@ To render a document on your computer (Python 3 and `pip install -r requirements
 python tools/md-to-docx.py docs/sample-policy.md output/sample-policy.docx --config docx-format.yaml
 ```
 
+To render every document exactly as GitHub Actions does, DOCX and PDF, with Docker:
+
+```bash
+docker build -t docs-builder -f tools/Dockerfile .
+docker run --rm -v "$PWD:/work" docs-builder bash tools/render-all.sh
+```
+
 ## How this started
 
 This repository was built by an AI coding agent, following the brief in [PROMPT.md](PROMPT.md) and the setup notes in [NOTES.md](NOTES.md).

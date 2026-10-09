@@ -25,6 +25,11 @@ on:
 permissions:
   contents: read
 
+# A new push to the same branch cancels the build that is still running for the old commit.
+concurrency:
+  group: build-docs-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,37 +37,22 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      # Cached between runs: the image is only rebuilt when tools/Dockerfile or requirements.txt change.
+      - name: Build the rendering image
+        uses: docker/build-push-action@v7
         with:
-          python-version: "3.13"
-          cache: pip
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
-
-      - name: Install LibreOffice and fonts
-        # Carlito and Caladea have the same metrics as Calibri and Cambria, so Word layouts don't shift.
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            libreoffice-writer fonts-crosextra-carlito fonts-crosextra-caladea fonts-liberation fonts-dejavu
+          context: .
+          file: tools/Dockerfile
+          tags: docs-builder:ci
+          load: true
+          cache-from: type=gha,scope=docs-builder
+          cache-to: type=gha,scope=docs-builder,mode=max
 
       - name: Render Markdown to DOCX (docx-format.yaml) and PDF
-        run: |
-          shopt -s nullglob
-          mkdir -p output
-          files=(docs/*.md)
-          [ -f REVIEWING.md ] && files+=(REVIEWING.md)
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "No documents found" >&2
-            exit 1
-          fi
-          for f in "${files[@]}"; do
-            python tools/md-to-docx.py "$f" "output/$(basename "$f" .md).docx" --config docx-format.yaml
-          done
-          soffice --headless --convert-to pdf --outdir output output/*.docx
-          ls -l output
+        run: docker run --rm -v "$PWD:/work" -u "$(id -u):$(id -g)" docs-builder:ci bash tools/render-all.sh
 
       - name: Upload rendered documents
         uses: actions/upload-artifact@v7
