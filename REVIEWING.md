@@ -15,7 +15,7 @@ Our documents are written in Markdown, stored in GitHub, and reviewed through Pu
 - **Suggestions work like tracked changes.** A reviewer can propose new wording, and the author accepts it with one click.
 - **Full history.** GitHub records who proposed, reviewed, approved and published every change, and when.
 - **The published files always match the approved text.** The PDF and DOCX are generated automatically from the approved Markdown, never edited by hand.
-- **You don't need to know Git to review.** Reviewers only use the GitHub website.
+- **You don't need to know Git.** Reviewers and authors only use the GitHub website.
 - **Everything happens in the browser.** You don't need to install anything.
 
 ## The process at a glance
@@ -49,6 +49,20 @@ You can open the PR and follow along.
 
 # For reviewers
 
+## How a review is requested
+
+A review starts when the author asks you for one.
+The reviewer must already be a **collaborator** on the repo (Settings → Collaborators → **Add people**, and they accept the invitation), or they won't appear in the list.
+
+The author requests the review in one of two places:
+
+- **When you open the PR:** on the "Open a pull request" form, click the gear next to **Reviewers** in the right column, type the username, select it, then click **Create pull request**.
+- **On a PR that's already open:** on the PR's **Conversation** tab, click the gear next to **Reviewers** in the right column and select the user. If they reviewed before, the circular-arrows icon next to their name asks them to review again.
+
+The reviewer gets a notification and an email, and the PR appears under **Pull requests → Review requests** for them.
+
+![A review request in the reviewer's notifications inbox (bell icon, top right)](guide/images/00-notifications.png)
+
 ## 1. Open the Pull Request
 
 You get a notification (email and the bell icon on GitHub) when someone asks for your review.
@@ -68,12 +82,12 @@ In the header of the file, click the **Display the rich diff** icon (the page ic
 ![The rendered ("rich diff") view of the document in Files changed](guide/images/02-files-changed-rich-diff.png)
 
 **As PDF or Word.**
-Open the **Checks** tab, choose **Build documents**, and download `rendered-documents` from the **Artifacts** section.
-It is a ZIP file with the PDF and DOCX of exactly this version.
+Open the **Actions** tab, choose **Build documents**, and download `rendered-documents` from the **Artifacts** section.
+It is a `ZIP` file with the `PDF` and `DOCX` of exactly this version.
 
 ![The rendered-documents artifact on the build page](guide/images/03-checks-artifact.png)
 
-You can read the PDF or DOCX, but **write your comments on GitHub**, not in the file.
+You can read the `PDF` or `DOCX`, but **write your comments on GitHub**, not in the file.
 Comments in a downloaded file are lost.
 
 ## 3. Comment on a line
@@ -166,7 +180,7 @@ The PR then showed the review and its threads on the **Conversation** tab, and m
 
 ## 8. Re-review only what changed
 
-When the author pushes fixes, you get a new notification.
+When the author commits fixes, you get a new notification.
 You don't need to read the whole document again.
 
 In **Files changed**, open the **All commits** menu at the top left and choose **Changes since your last review**.
@@ -190,15 +204,18 @@ The author fixing everything is not enough to unblock the merge.
 Never edit `main` directly; it is protected.
 Each change, or each new document, gets its own branch with a descriptive name, for example `docs/sample-policy` or `docs/password-policy-update`.
 
-From the command line:
+1. On the **Code** tab of the repository, click the branch menu at the top left of the file list (it shows `main`).
+2. Type the new branch name and click **Create branch docs/my-change from main**.
+3. GitHub switches to your branch. Check that the branch menu now shows its name.
 
-```bash
-git switch main
-git pull
-git switch -c docs/my-change
-```
+To work on your branch:
 
-On the GitHub website, editing a file and choosing **Create a new branch for this commit** does the same thing.
+- **Change a document:** open the file and click the pencil icon (**Edit this file**).
+- **Add a document:** click **Add file**, then **Create new file**, and type the name with its folder, for example `docs/password-policy.md`.
+
+When you are done, click **Commit changes**, write a short description, and choose **Commit directly to the `docs/my-change` branch**.
+
+If you start editing on `main` by mistake, GitHub won't let you commit there and offers **Create a new branch for this commit and start a pull request** instead, which is fine too.
 
 ## 2. Write one sentence per line
 
@@ -220,8 +237,8 @@ Leave an empty line between paragraphs, and between a heading and its text.
 
 ## 3. Open the Pull Request with the template
 
-Push your branch, then open the PR on GitHub.
-GitHub shows a **Compare & pull request** button after you push.
+After your first commit on the branch, GitHub shows a yellow banner with a **Compare & pull request** button.
+If the banner is gone, open the **Pull requests** tab, click **New pull request**, choose **base: main** and **compare:** your branch, and click **Create pull request**.
 
 ![The PR creation form, pre-filled with the template](guide/images/01-pr-creation-form.png)
 
@@ -235,6 +252,7 @@ Fill in every section:
 - **Review deadline**: a date.
 
 Add the reviewers on the right under **Reviewers**, then click **Create pull request**.
+See "How a review is requested" under "For reviewers" for the details.
 
 A few minutes later the **Checks** tab shows the **Build documents** run.
 When it is green, the PDF and DOCX are available to reviewers as the `rendered-documents` artifact.
@@ -248,7 +266,7 @@ GitHub only lets reviewers comment on lines that are part of the PR's changes, p
 
 **When you need a full review of an existing document** (for example, the yearly review), use the "add the whole file" trick, so that every line is new again:
 
-1. Create a branch from `main` where the document is deleted, for example `review/base-sample-policy`, and push it.
+1. Create a branch from `main` where the document is deleted, for example `review/base-sample-policy`. Create the branch as in step 1, open the document on it, choose **Delete file** from the **⋯** menu, and commit directly to that branch.
 2. Create your working branch from `main` as usual (the document is still there), and make any changes.
 3. Open the PR with **base** = `review/base-sample-policy` and **compare** = your working branch.
 4. Every line of the document now appears as added, and reviewers can comment anywhere.
@@ -280,18 +298,13 @@ Click **Add suggestion to batch** (or **Add to batch**) on each suggestion you a
 Then click **Commit suggestions** at the top of the page to create one commit with all of them.
 This is better than one commit per typo.
 
-If you commit suggestions on GitHub and also edit files on your computer, run `git pull` before you continue working locally.
+## 7. Make your other fixes
 
-## 7. Push your other fixes
+Fix the comments that weren't suggestions directly on GitHub:
 
-Fix the comments that weren't suggestions in your copy of the branch, then commit and push:
-
-```bash
-git pull
-# edit the files
-git commit -am "Address review: password rotation period, Restricted encryption, critical incident deadline"
-git push
-```
+1. In the PR's **Files changed** tab, open the **⋯** menu in the file header and choose **Edit file**. This opens the file on your branch.
+2. Make the changes.
+3. Click **Commit changes**, describe the fix (for example "Address review: password rotation period, Restricted encryption, critical incident deadline"), and choose **Commit directly to** your branch.
 
 The PR updates automatically, the PDF and DOCX are rebuilt, and the reviewers are notified.
 
@@ -379,9 +392,9 @@ They should reply explaining why, then resolve the thread.
 Don't commit it, because it would replace the line with the instruction.
 Do what it asks by hand, reply in the thread, and resolve it.
 
-**Do I need to install Git?**
-Reviewers don't.
-Authors can do everything on the GitHub website, but Git and a Markdown editor (for example VS Code) are more comfortable for larger documents.
+**Do I need to install anything?**
+No.
+Reviewers and authors do everything on the GitHub website.
 
 \newpage
 
@@ -406,15 +419,15 @@ Authors can do everything on the GitHub website, but Git and a Markdown editor (
 
 | I want to... | Do this |
 |---|---|
-| Start a change | New branch from `main`, for example `docs/my-change` |
+| Start a change | **Code** tab, branch menu (shows `main`), type a name, **Create branch** |
 | Write reviewable text | One sentence per line, empty line between paragraphs |
 | Ask for a review | Open a PR, fill in the template, add reviewers |
 | Get a full review of an existing document | The "add the whole file" trick: PR against a branch where the file is deleted |
 | Accept one suggestion | **Commit suggestion**, then **Commit changes** |
 | Accept several suggestions | **Add suggestion to batch** on each, then **Commit suggestions** |
-| Fix other comments | Edit, commit, `git push` |
+| Fix other comments | **Files changed**, file **⋯** menu, **Edit file**, then **Commit changes** to your branch |
 | Close a comment | Reply, then **Resolve conversation** |
 | Publish | After approval, **Squash and merge**, then **Delete branch** |
 | Get the published files | **Actions**, latest **Build documents** run on `main`, **Artifacts** |
 
-**Rules on `main`:** at least 1 approval, all conversations resolved, no direct pushes.
+**Rules on `main`:** at least 1 approval, all conversations resolved, no direct changes.
