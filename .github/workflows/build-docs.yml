@@ -37,22 +37,17 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      # Cached between runs: the image is only rebuilt when tools/Dockerfile or requirements.txt change.
-      - name: Build the rendering image
-        uses: docker/build-push-action@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
-          context: .
-          file: tools/Dockerfile
-          tags: docs-builder:ci
-          load: true
-          cache-from: type=gha,scope=docs-builder
-          cache-to: type=gha,scope=docs-builder,mode=max
+          python-version: "3.13"
+          cache: pip
 
-      - name: Render Markdown to DOCX (docx-format.yaml) and PDF
-        run: docker run --rm -v "$PWD:/work" -u "$(id -u):$(id -g)" docs-builder:ci bash tools/render-all.sh
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Render Markdown to DOCX (docx-format.yaml)
+        run: bash tools/render-all.sh
 
       - name: Upload rendered documents
         uses: actions/upload-artifact@v7

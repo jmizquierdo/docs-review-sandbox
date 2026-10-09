@@ -1,6 +1,5 @@
 # Formatting rules for tools/md-to-docx.py.
-# They apply to the DOCX of every document; the PDF is made from that DOCX,
-# so it follows the same rules.
+# They apply to the DOCX of every document.
 # Change them through a PR like any document.
 
 # --- Page breaks ---
