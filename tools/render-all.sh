@@ -14,5 +14,5 @@ fi
 for f in "${files[@]}"; do
   python tools/md-to-docx.py "$f" "output/$(basename "$f" .md).docx" --config docx-format.yaml
 done
-soffice --headless --convert-to pdf --outdir output output/*.docx
+soffice -env:UserInstallation=file:///tmp/lo-profile --headless --convert-to pdf --outdir output output/*.docx
 ls -l output
