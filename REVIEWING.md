@@ -61,6 +61,8 @@ The author requests the review in one of two places:
 
 The reviewer gets a notification and an email, and the PR appears under **Pull requests → Review requests** for them.
 
+![A review request in the reviewer's notifications inbox (bell icon, top right)](guide/images/00-notifications.png)
+
 ## 1. Open the Pull Request
 
 You get a notification (email and the bell icon on GitHub) when someone asks for your review.
