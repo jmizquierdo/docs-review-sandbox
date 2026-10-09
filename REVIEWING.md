@@ -8,7 +8,7 @@ toc: true
 
 # Why we review this way
 
-Our documents are written in Markdown, stored in GitHub, and reviewed through Pull Requests (PRs) instead of passing Word files around by email.
+Our documents are written in Markdown, stored in GitHub, and reviewed through Pull Requests (PRs) instead of passing Word files around by email or sharing copies on SharePoint sites.
 
 - **One source of truth.** There is one copy of each document, in the repository. There are no "v3_final_JM_reviewed.docx" files.
 - **Comments are tied to exact sentences.** Each comment is attached to the line it talks about, so nobody has to guess what "the second paragraph on page 4" means.
@@ -109,6 +109,15 @@ When you know exactly what the text should say, propose it instead of describing
 3. GitHub inserts a block that starts with `` ```suggestion `` and contains the current text.
 4. Edit the text **inside** the block so it reads the way it should.
 5. Optionally, add a short explanation **above** the block.
+
+**Only the new text goes inside the block.**
+Whatever is inside replaces the original line(s) when the author commits the suggestion.
+If you write an instruction there, such as "Highlight the tab in the picture", committing it would replace the line with your instruction.
+In this screenshot from the review of this guide, committing the suggestion would have deleted the image:
+
+![Wrong: an instruction written inside a suggestion block](guide/images/04-suggest-changes.png)
+
+For requests like that, write a normal comment without a suggestion block.
 
 In the example, the reviewer fixed the typo like this:
 
@@ -365,6 +374,10 @@ That usually means the author already acted on it.
 **Can the author ignore a suggestion?**
 Yes.
 They should reply explaining why, then resolve the thread.
+
+**A suggestion contains an instruction instead of new text. What do I do?**
+Don't commit it, because it would replace the line with the instruction.
+Do what it asks by hand, reply in the thread, and resolve it.
 
 **Do I need to install Git?**
 Reviewers don't.
