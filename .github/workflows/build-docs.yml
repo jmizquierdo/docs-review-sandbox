@@ -6,6 +6,9 @@ on:
       - "docs/**.md"
       - "REVIEWING.md"
       - "guide/images/**"
+      - "docx-format.yaml"
+      - "tools/**"
+      - "requirements.txt"
       - ".github/workflows/build-docs.yml"
   push:
     branches: [main]
@@ -13,15 +16,14 @@ on:
       - "docs/**.md"
       - "REVIEWING.md"
       - "guide/images/**"
+      - "docx-format.yaml"
+      - "tools/**"
+      - "requirements.txt"
       - ".github/workflows/build-docs.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
-
-env:
-  # Pinned on purpose: bump deliberately, not implicitly.
-  PANDOC_IMAGE: pandoc/latex:3.11.0
 
 jobs:
   build:
@@ -30,7 +32,23 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Render Markdown to PDF and DOCX
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install LibreOffice and fonts
+        # Carlito and Caladea have the same metrics as Calibri and Cambria, so Word layouts don't shift.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libreoffice-writer fonts-crosextra-carlito fonts-crosextra-caladea fonts-liberation fonts-dejavu
+
+      - name: Render Markdown to DOCX (docx-format.yaml) and PDF
         run: |
           shopt -s nullglob
           mkdir -p output
@@ -41,13 +59,9 @@ jobs:
             exit 1
           fi
           for f in "${files[@]}"; do
-            name="$(basename "$f" .md)"
-            echo "Rendering $f"
-            docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" "$PANDOC_IMAGE" \
-              "$f" -o "output/$name.pdf" --pdf-engine=xelatex -V geometry:margin=2.5cm
-            docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" "$PANDOC_IMAGE" \
-              "$f" -o "output/$name.docx"
+            python tools/md-to-docx.py "$f" "output/$(basename "$f" .md).docx" --config docx-format.yaml
           done
+          soffice --headless --convert-to pdf --outdir output output/*.docx
           ls -l output
 
       - name: Upload rendered documents
